@@ -25,27 +25,59 @@
 </head>
 <body>
 	<ion-pane>
+		<ion-nav-view></ion-nav-view>
+	</ion-pane>
+
+	<script type="text/ng-template" id="main.html">
+		<ion-nav-bar class="bar-positive">
+			<ion-nav-back-button class="button-clear">
+				<i class="ion-arrow-left-c"></i>
+				Back
+			</ion-nav-back-button>
+		</ion-nav-bar>
 		<ion-tabs class="tabs-positive">
-			<ion-tab icon="ion-home" ui-sref="home">
-				<ion-nav-view name="home"></ion-nav-view>
+			<ion-tab icon="ion-home" ui-sref="app.todos">
+				<ion-nav-view name="todos"></ion-nav-view>
 			</ion-tab>
-			<ion-tab icon="ion-help" ui-sref="help">
+			<ion-tab icon="ion-help" ui-sref="app.help">
 				<ion-nav-view name="help"></ion-nav-view>
 			</ion-tab>
 		</ion-tabs>
-	</ion-pane>
+	</script>
 
-	<script type="text/ng-template" id="home.html">
-		<ion-view title="Home">
-			<ion-content padding="true">
-				<h2>Home Page</h2>
-				<p>Here is the main route for the app.</p>
+	<script type="text/ng-template" id="todos.html">
+		<ion-view title="Todos">
+			<ion-content>
+				<ion-list>
+					<ion-item ng-repeat="todo in todos" class="item item-icon-right" ui-sref="app.todos.detail({todo: $index})">
+						<span ng-class="{done: todo.done}">{{todo.title}}</span>
+						<i class="icon ion-ios7-arrow-right"></i>
+					</ion-item>
+				</ion-list>
+			</ion-content>
+		</ion-view>
+	</script>
+
+	<script type="text/ng-template" id="todo.html">
+		<ion-view title="Todo">
+			<ion-content>
+				<div class="item">
+					<p>{{todo.title}}</p>
+				</div>
+				<div class="item item-checkbox">
+					<div>
+						<label class="checkbox">
+							<input type="checkbox" ng-model="todo.done">
+						</label>
+						Done
+					</div>
+				</div>
 			</ion-content>
 		</ion-view>
 	</script>
 
 	<script type="text/ng-template" id="help.html">
-		<ion-view title="Home">
+		<ion-view title="Help">
 			<ion-content padding="true">
 				<h2>Using the app</h2>
 				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit tenetur consequuntur architecto nesciunt unde alias cumque magni vitae laboriosam aut nemo quod quibusdam, maiores numquam. Quidem nisi corporis nobis ratione!</p>

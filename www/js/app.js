@@ -1,18 +1,41 @@
-var module = angular.module("App", ["ionic"]);
+var app = angular.module("App", ["ionic"]);
 
-module.config(function($stateProvider, $urlRouterProvider) {
-	$urlRouterProvider.otherwise("/");
+app.config(function($stateProvider, $urlRouterProvider) {
+	$urlRouterProvider.otherwise("/todos");
 
-	$stateProvider.state("home", {
-		url: "/home",
+	$stateProvider.state("app", {
+		abstract: true,
+		templateUrl: "main.html"
+	})
+
+	$stateProvider.state("app.todos", {
+		abstract: true,
+		url: "/todos",
 		views: {
-			home: {
-				templateUrl: "home.html"
+			todos: {
+				template: "<ion-nav-view></ion-nav-view>"
 			}
 		}
 	});
 
-	$stateProvider.state("help", {
+	$stateProvider.state("app.todos.index", {
+		url: "",
+		templateUrl: "todos.html",
+		controller: "todosCtrl"
+	});
+
+	$stateProvider.state("app.todos.detail", {
+		url: "/:todo",
+		templateUrl: "todo.html",
+		controller: "todoCtrl",
+		resolve: {
+			todo: function($stateParams, todoService) {
+				return todoService.getTodo($stateParams.todo);
+			}
+		}
+	});
+
+	$stateProvider.state("app.help", {
 		url: "/help",
 		views: {
 			help: {
@@ -21,3 +44,26 @@ module.config(function($stateProvider, $urlRouterProvider) {
 		}
 	});
 });
+
+app.factory("todoService", function() {
+	var todos = [
+		{title: "task1", done: true},
+		{title: "task2", done: false},
+		{title: "task3", done: false}
+	];
+
+	return {
+		todos: todos,
+		getTodo: function(index) {
+			return todos[index];
+		}
+	};
+});
+
+app.controller("todosCtrl", ["$scope", "todoService", function($scope, todoService) {
+	$scope.todos = todoService.todos;
+}]);
+
+app.controller("todoCtrl", ["$scope", "todo", function($scope, todo) {
+	$scope.todo = todo;
+}]);
